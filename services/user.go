@@ -10,6 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
+func FindUser(email string) {
+
+}
 func RegisterUserService(c *gin.Context, input dto.RegisterDTO) (*gorm.DB, error) {
 
 	password, err := helper.ConvertToHashPassword(input.Password)
