@@ -15,8 +15,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	SetupRouter()
+	r := SetupRouter()
+	r.Run()
 }
 
 func SetupRouter() *gin.Engine {
@@ -34,5 +34,6 @@ func SetupRouter() *gin.Engine {
 	}
 	router.Use(cors.New(corsConfig))
 	controller.Routers(router)
+
 	return router
 }

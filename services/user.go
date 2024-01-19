@@ -1,34 +1,27 @@
 package services
 
 import (
-	"auth-backend/dto"
-	"auth-backend/helper"
 	"auth-backend/models"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func FindUser(email string) {
-
-}
-func RegisterUserService(c *gin.Context, input dto.RegisterDTO) (*gorm.DB, error) {
-
-	password, err := helper.ConvertToHashPassword(input.Password)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"success": false,
-			"message": "Something went wrong, please try again",
-		})
+func FindUser(c *gin.Context, email string) (models.User, error, int) {
+	var user models.User
+	result := models.DB.Find(&user, "email = ?", email)
+	if result.Error != nil || user.Email == nil {
+		return user, errors.New("User not found"), http.StatusNotFound
 	}
-	user := models.User{FirstName: input.FirstName, LastName: input.LastName, Email: &input.Email, Password: password}
-
-	result := models.DB.Create(&user)
-	return result, nil
+	return user, nil, http.StatusOK
 }
 
-func LoginUserService(c *gin.Context, input dto.LoginDTO) (*gorm.DB, error) {
-
+func AllUsers(c *gin.Context) ([]models.User, error, int) {
+	var users []models.User
+	result := models.DB.Find(&users)
+	if result.Error != nil {
+		return nil, errors.New("No record found"), http.StatusNotFound
+	}
+	return users, nil, http.StatusOK
 }

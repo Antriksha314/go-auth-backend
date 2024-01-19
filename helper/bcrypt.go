@@ -13,10 +13,10 @@ func ConvertToHashPassword(value string) ([]byte, error) {
 	return result, nil
 }
 
-func ComparePassword(password []byte, hashPassword []byte) (bool, error) {
-	error := bcrypt.CompareHashAndPassword(hashPassword, password)
+func ComparePassword(password string, hashPassword []byte) error {
+	error := bcrypt.CompareHashAndPassword(hashPassword, []byte(password))
 	if error != nil {
-		return false, error
+		return error
 	}
-	return true, nil
+	return nil
 }
