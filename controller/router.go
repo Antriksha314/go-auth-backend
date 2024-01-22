@@ -9,4 +9,6 @@ func Routers(router *gin.Engine) {
 	router.POST("/login", Login)
 	router.GET("/users", Users)
 	router.GET("/user/:email", User)
+	router.PUT("/user/update", Update)
+	router.PUT("/change-password", ChangePassword)
 }

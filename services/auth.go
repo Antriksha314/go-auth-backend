@@ -13,7 +13,7 @@ import (
 
 func RegisterUserService(c *gin.Context, input dto.RegisterDTO) (*gorm.DB, error, int) {
 
-	user, err, code := FindUser(c, input.Email)
+	user, err, code := FindUserService(c, input.Email)
 
 	if err != nil && user.Email != nil {
 		return nil, err, code
@@ -35,7 +35,7 @@ func RegisterUserService(c *gin.Context, input dto.RegisterDTO) (*gorm.DB, error
 }
 
 func LoginUserService(c *gin.Context, input dto.LoginDTO) (*string, error, int) {
-	user, err, code := FindUser(c, input.Email)
+	user, err, code := FindUserService(c, input.Email)
 
 	if err != nil {
 		return nil, err, code

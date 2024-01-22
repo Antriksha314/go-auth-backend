@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"auth-backend/dto"
 	"auth-backend/services"
 
 	"github.com/gin-gonic/gin"
@@ -8,7 +9,7 @@ import (
 
 func User(response *gin.Context) {
 	email := response.Param("email")
-	user, err, code := services.FindUser(response, email)
+	user, err, code := services.FindUserService(response, email)
 
 	if err != nil {
 		response.JSON(code, gin.H{
@@ -26,7 +27,7 @@ func User(response *gin.Context) {
 }
 
 func Users(response *gin.Context) {
-	users, err, code := services.AllUsers(response)
+	users, err, code := services.AllUsersService(response)
 
 	if err != nil {
 		response.JSON(code, gin.H{
@@ -41,4 +42,52 @@ func Users(response *gin.Context) {
 		"data":    users,
 	})
 
+}
+
+func Update(response *gin.Context) {
+	var payload dto.UpdateUser
+	if err := response.BindJSON(&payload); err != nil {
+		response.AbortWithStatus(400)
+		return
+	}
+	_, err, code := services.UpdateUserService(response, payload)
+
+	if err != nil {
+		response.JSON(code, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	response.JSON(code, gin.H{
+		"success": true,
+		"message": "User updated successfully",
+	})
+	return
+}
+
+func ChangePassword(response *gin.Context) {
+	var payload dto.ChangePassword
+
+	if err := response.BindJSON(&payload); err != nil {
+		response.AbortWithStatus(400)
+		return
+	}
+
+	_, err, code := services.ChangePassword(response, payload)
+
+	if err != nil {
+		response.JSON(code, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	response.JSON(code, gin.H{
+		"success": true,
+		"message": "Password change successfully",
+	})
+	return
 }
