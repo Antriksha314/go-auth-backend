@@ -43,7 +43,7 @@ func Login(response *gin.Context) {
 		return
 	}
 
-	_, err, code := services.LoginUserService(response, payload)
+	token, err, code := services.LoginUserService(response, payload)
 	if err != nil {
 		response.JSON(code, gin.H{
 			"message": err.Error(),
@@ -55,6 +55,7 @@ func Login(response *gin.Context) {
 	response.JSON(code, gin.H{
 		"message": "Login successfully!",
 		"success": true,
+		"data":    token,
 	})
 
 }

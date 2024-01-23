@@ -46,5 +46,11 @@ func LoginUserService(c *gin.Context, input dto.LoginDTO) (*string, error, int) 
 	if passwordCheck != nil {
 		return nil, errors.New("Wrong password"), http.StatusUnauthorized
 	}
-	return nil, nil, http.StatusOK
+
+	token, err, code := helper.GenerateJWTtoken(input.Email)
+
+	if err != nil {
+		return nil, err, code
+	}
+	return token, nil, http.StatusOK
 }
