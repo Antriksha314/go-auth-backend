@@ -24,7 +24,7 @@ func SetupRouter() *gin.Engine {
 	models.ConnectToDatabase()
 
 	//Basic router
-	router := gin.Default()
+	routers := gin.Default()
 
 	corsConfig := cors.Config{
 		AllowOrigins:  []string{"*"},
@@ -32,8 +32,9 @@ func SetupRouter() *gin.Engine {
 		AllowHeaders:  []string{"*"},
 		AllowWildcard: true,
 	}
-	router.Use(cors.New(corsConfig))
+	routers.Use(cors.New(corsConfig))
+	router := routers.Group("/api")
 	controller.Routers(router)
 
-	return router
+	return routers
 }

@@ -2,24 +2,23 @@ package controller
 
 import (
 	"auth-backend/dto"
+	"auth-backend/models"
 	"auth-backend/services"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func User(response *gin.Context) {
-	email := response.Param("email")
-	user, err, code := services.FindUserService(response, email)
+	user := response.MustGet("user").(models.User)
 
-	if err != nil {
-		response.JSON(code, gin.H{
-			"message": err.Error(),
+	if user.Email == nil {
+		response.JSON(http.StatusNotFound, gin.H{
+			"message": "User not found",
 			"success": false,
 		})
-		return
 	}
-
-	response.JSON(code, gin.H{
+	response.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    user,
 	})

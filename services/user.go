@@ -30,10 +30,10 @@ func AllUsersService(c *gin.Context) ([]models.User, error, int) {
 }
 
 func UpdateUserService(c *gin.Context, input dto.UpdateUser) (*gorm.DB, error, int) {
-	user, err, code := FindUserService(c, input.Email)
+	user := c.MustGet("user").(models.User)
 
-	if err != nil {
-		return nil, err, code
+	if user.Email == nil {
+		return nil, errors.New("User not found"), http.StatusNotFound
 	}
 
 	user.FirstName = input.FirstName
@@ -44,10 +44,10 @@ func UpdateUserService(c *gin.Context, input dto.UpdateUser) (*gorm.DB, error, i
 }
 
 func ChangePassword(c *gin.Context, input dto.ChangePassword) (*gorm.DB, error, int) {
-	user, err, code := FindUserService(c, input.Email)
+	user := c.MustGet("user").(models.User)
 
-	if err != nil {
-		return nil, err, code
+	if user.Email == nil {
+		return nil, errors.New("User not found"), http.StatusNotFound
 	}
 
 	passwordCheck := helper.ComparePassword(input.OldPassword, user.Password)

@@ -21,14 +21,14 @@ func GenerateJWTtoken(email string) (*string, error, int) {
 	}
 	return &token, nil, http.StatusOK
 }
-func VerifyJWTtoken(token string) (interface{}, error, int) {
+func VerifyJWTtoken(token string) (*jwt.Token, error, int) {
 	var secretKey = []byte(os.Getenv("JWT_KEY"))
 
 	data, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
 	if err != nil {
-		return nil, errors.New("Something went wrong"), http.StatusInternalServerError
+		return nil, errors.New("Invalid token"), http.StatusUnauthorized
 	}
 
 	return data, nil, http.StatusOK

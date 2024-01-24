@@ -1,14 +1,19 @@
 package controller
 
 import (
+	"auth-backend/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
-func Routers(router *gin.Engine) {
+func Routers(router *gin.RouterGroup) {
 	router.POST("/register", Register)
 	router.POST("/login", Login)
+
+	// Protected routes
+	router.Use(middleware.Protect)
+	router.GET("/user", User)
 	router.GET("/users", Users)
-	router.GET("/user/:email", User)
-	router.PUT("/user/update", Update)
 	router.PUT("/change-password", ChangePassword)
+	router.PUT("/user/update", Update)
 }
